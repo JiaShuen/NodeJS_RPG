@@ -29,20 +29,41 @@ function checkInput(input, posVal) {
 }
 
 
-// Start of program
+// Main page
 do {
     
-    console.log("<<<Welcome to Fantasy RPG!>>>\nPress (1) to start the game.\nPress (2) to exit.");
+    console.log("<<<Welcome to Fantasy RPG!>>>\n(1) to start the game.\n(2) to exit.");
     var userIn = readline.question(">>> ");
-
     var checkUserIn = checkInput(userIn, [1, 2]);
 
-    if (checkUserIn && userIn == '2') {
-        console.log("Exiting the game...");
-        process.exit(0);
+    if (checkUserIn) {
+        if (userIn == '2') {
+            console.log("Exiting the game...");
+            process.exit(0);
+        } else {
+
+            // Options page
+            do {
+                console.log('What would you like to do?\n(1) View character stats\n(2) Start battle\n(3) Back to main menu');
+                var userIn2 = readline.question(">>> ");
+                var checkUserIn2 = checkInput(userIn2, [1, 2, 3]);
+
+                if (checkUserIn2) {
+                    if (userIn2 == '3') {
+                        checkUserIn = false;
+                        break;
+                    }
+                }
+
+            } while(!checkUserIn2);
+        }
+        
     };
 
 } while(!checkUserIn);
+
+
+
 
 var atkhero = getRandomInt();
 var atkdemon = getRandomInt();
