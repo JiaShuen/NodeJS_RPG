@@ -28,6 +28,7 @@ function checkInput(input, posVal) {
 
 // Start of program
 do {
+    
     console.log("<<<Welcome to Fantasy RPG!>>>\nPress (1) to start the game.\nPress (2) to exit.");
     var userIn = readline.question(">>> ");
 
@@ -37,6 +38,7 @@ do {
         console.log("Exiting the game...");
         process.exit(0);
     };
+
 } while(!checkUserIn);
 
 var atkhero = getRandomInt();
