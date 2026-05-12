@@ -11,7 +11,9 @@ function getRandomInt() {
 
 function checkInput(input, posVal) {
     var pass = true;
+
     if (!Number.isInteger(parseInt(input))) {
+        console.log("Invalid input! Please enter a valid option.");
         pass = false;
         return pass;
     } else {
@@ -20,6 +22,7 @@ function checkInput(input, posVal) {
                 return pass;
             }
         }
+        console.log("Invalid input! Please enter a valid option.");
         pass = false;
         return pass;
     }
