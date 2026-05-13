@@ -1,4 +1,4 @@
-class character {
+class Character {
     constructor(name, hp, attack) {
         this.name = name;
         this.hp = hp;
@@ -19,4 +19,4 @@ class character {
 
 }
 
-module.exports = character;
+module.exports = Character;

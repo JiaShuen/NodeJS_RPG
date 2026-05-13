@@ -1,8 +1,9 @@
-const character = require("./Classes/character");
+const Hero = require("./Classes/hero");
+const Demon = require("./Classes/demon");
 const readline = require('readline-sync');
 
-var hero = new character("Hero", 3, 0);
-var demonKing = new character("Demon King", 3, 0);
+var hero = new Hero("Hero", 3, 0);
+var demonKing = new Demon("Demon King", 3, 0);
 var continueGame = true;
 
 function getRandomInt() {
@@ -41,7 +42,6 @@ do {
             console.log("Exiting the game...");
             process.exit(0);
         } else {
-
             // Options page
             do {
                 console.log('What would you like to do?\n(1) View character stats\n(2) Start battle\n(3) Back to main menu');
@@ -54,10 +54,8 @@ do {
                         break;
                     }
                 }
-
             } while(!checkUserIn2);
         }
-        
     };
 
 } while(!checkUserIn);
@@ -86,6 +84,11 @@ do {
 
     if (hero.getHp() == 0 || demonKing.getHp() == 0) {
         continueGame = false;
+        if (hero.getHp() == 0) {
+            console.log("You have been defeated by the Demon King! Game Over.");
+        } else {
+            console.log("Congratulations! You have defeated the Demon King!");
+        }
     }
 
 } while (continueGame);
