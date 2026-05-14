@@ -2,7 +2,7 @@ const Item  = require('./item.js');
 
 class AtkItem extends Item {
     constructor(id, name, description, type = 'Atk', damage) {
-        super(name, description, type);
+        super(id, name, description, type);
         this.damage = damage;
     }
 

@@ -1,0 +1,9 @@
+{
+  "items": [
+    {"id": 1, "name": "Sword", "description": "A sharp blade used for combat.", "type": "Atk", "attack": 3},
+    {"id": 2, "name": "Shield", "description": "A sturdy shield used for defense.", "type": "Def", "defense": 2},
+    {"id": 3, "name": "Bow", "description": "A ranged weapon used for attacking from a distance.", "type": "Atk", "attack": 1},
+    {"id": 4, "name": "Helmet", "description": "A protective headgear used for defense.", "type": "Def", "defense": 1},
+    {"id": 5, "name": "Potion", "description": "A magical liquid that restores health.", "type": "Def", "defense": 2}
+  ]
+}
