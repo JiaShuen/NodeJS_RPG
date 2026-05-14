@@ -1,11 +1,5 @@
-// const fs = require('fs');
-// var gameItems = JSON.parse(fs.readFileSync('./Data/items.json')).items;
-// console.log(gameItems[0]);
+const fs = require('fs');
 
-console.log(parseInt('hi'));
-console.log(Number.isInteger(4));
+var saveHero = fs.readFileSync('./Data/saveData.json');
 
-
-var arr1 = [1, 2, 3];
-console.log(arr1.length);
-console.log(arr1[3]);
+console.log(saveHero == '');

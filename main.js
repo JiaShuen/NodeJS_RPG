@@ -6,13 +6,22 @@ const readline = require('readline-sync');
 const fs = require('fs');
 
 //initialize characters and game variables
-var hero = new Hero("Hero", 3, 0);
+var hero;
 var demonKing = new Demon("Demon King", 3, 0);
-var continueGame = true;
 var itemsArr = JSON.parse(fs.readFileSync('./Data/items.json')).items;
+var continueGame = true;
+var saveHero = fs.readFileSync('./Data/saveData.json');
+if (saveHero == '') {
+    hero = new Hero("Hero", 3, 0);
+} else {
+    var saveData = JSON.parse(saveHero);
+    console.log(saveData);
+    hero = new Hero(saveData.name, saveData.hp, saveData.atk, saveData.items);
+}
 
-function getRandomInt(maxVal) {
-  return Math.floor(Math.random() * maxVal);
+
+function getRandomInt(minVal, maxVal) {
+  return Math.floor(Math.random() * (Math.floor(maxVal) - Math.ceil(minVal) + 1)) + Math.ceil(minVal);
 }
 
 function checkInput(input, posVal) {
@@ -35,8 +44,8 @@ function checkInput(input, posVal) {
 }
 
 function playgame() {
-    var atkhero = getRandomInt(10);
-    var atkdemon = getRandomInt(6);
+    var atkhero = getRandomInt(1, 10);
+    var atkdemon = getRandomInt(1, 6);
 
     console.log("Hero ATK: " + atkhero + " | Demon King ATK: " + atkdemon);
 
@@ -58,9 +67,7 @@ function playgame() {
             console.log("Congratulations! You have defeated the Demon King! You have earned an item!");
             if (hero.getItems().length < 5) {
                 // Add an item to the hero's inventory
-                var randomItem = itemsArr[Math.floor(Math.random() * (itemsArr.length - 1))];
-
-                console.log(randomItem);
+                var randomItem = itemsArr[Math.floor(Math.random() * (itemsArr.length))];
 
                 if (randomItem.type == 'Atk') {
                     hero.items.push(new AtkItem(randomItem.id, randomItem.name, randomItem.description, randomItem.type, randomItem.attack));
@@ -68,7 +75,8 @@ function playgame() {
                     hero.items.push(new DefItem(randomItem.id, randomItem.name, randomItem.description, randomItem.type, randomItem.defense));
                 }
 
-                console.log(hero.getItems());
+                var jsonData = JSON.stringify(hero);
+                fs.writeFileSync('./Data/saveData.json', jsonData);
             }
         }
     }
@@ -77,10 +85,9 @@ function playgame() {
 
 // Main page
 do {
-    
     console.log("<<<Welcome to Fantasy RPG!>>>\n(1) to start the game.\n(2) to exit.");
     var userIn = readline.question(">>> ");
-    var checkUserIn = checkInput(userIn, [1, 2]);
+    var checkUserIn = checkInput(userIn, [1, 2]); // Validate user input. returns true/false.
 
     if (checkUserIn) {
         if (userIn == '2') {
@@ -91,21 +98,25 @@ do {
             do {
                 console.log('What would you like to do?\n(1) View character stats\n(2) Start battle\n(3) Back to main menu');
                 var userIn2 = readline.question(">>> ");
-                var checkUserIn2 = checkInput(userIn2, [1, 2, 3]);
+                var checkUserIn2 = checkInput(userIn2, [1, 2, 3]); // Validate user input. returns true/false.
 
                 if (checkUserIn2) {
-                    if (userIn2 == '3') {
-                        checkUserIn = false;
-                        break;
+                    switch(userIn2) {
+                        case '1':
+                            console.log('Viewing hero stats\n(1)Back');
+                            break;
+                        case '2':
+                            do {
+                                playgame();
+                            } while (continueGame);
+                            break;
+                        default: // handling case '3'
+                            checkUserIn = false;
                     }
                 }
             } while(!checkUserIn2);
         }
     };
-
 } while(!checkUserIn);
 
 
-do {
-    playgame();
-} while (continueGame);
