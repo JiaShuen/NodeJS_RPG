@@ -1,1 +1,27 @@
-{"name":"Hero","hp":2,"attack":0,"items":[{"id":4,"name":"Helmet","desc":"A protective headgear used for defense.","type":"Def","defense":1}]}
+{
+  "name": "Hero",
+  "hp": 1,
+  "items": [
+    {
+      "id": 4,
+      "name": "Helmet",
+      "desc": "A protective headgear used for defense.",
+      "type": "Def",
+      "defense": 1
+    },
+    {
+      "id": 4,
+      "name": "Helmet",
+      "desc": "A protective headgear used for defense.",
+      "type": "Def",
+      "defense": 1
+    },
+    {
+      "id": 3,
+      "name": "Bow",
+      "desc": "A ranged weapon used for attacking from a distance.",
+      "type": "Atk",
+      "damage": 1
+    }
+  ]
+}

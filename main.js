@@ -19,7 +19,6 @@ if (saveHero == '') {
     hero = new Hero(saveData.name, saveData.hp, saveData.atk, saveData.items);
 }
 
-
 function getRandomInt(minVal, maxVal) {
   return Math.floor(Math.random() * (Math.floor(maxVal) - Math.ceil(minVal) + 1)) + Math.ceil(minVal);
 }
@@ -44,6 +43,7 @@ function checkInput(input, posVal) {
 }
 
 function playgame() {
+
     var atkhero = getRandomInt(1, 10);
     var atkdemon = getRandomInt(1, 6);
 
@@ -75,7 +75,7 @@ function playgame() {
                     hero.items.push(new DefItem(randomItem.id, randomItem.name, randomItem.description, randomItem.type, randomItem.defense));
                 }
 
-                var jsonData = JSON.stringify(hero);
+                var jsonData = JSON.stringify(hero, null, 2);
                 fs.writeFileSync('./Data/saveData.json', jsonData);
             }
         }
@@ -103,7 +103,27 @@ do {
                 if (checkUserIn2) {
                     switch(userIn2) {
                         case '1':
-                            console.log('Viewing hero stats\n(1)Back');
+                            let tempItemsDisplay= '';
+                            // Cannot use methods like getName() as array objects were not instantiated when loaded from JSON file. They are plain objects.
+                            for (let i = 0; i < hero.getItems().length; i++) {
+                                tempItemsDisplay += '\n(' + (i + 1) + ')\nName: ' + hero.getItems()[i].name + '\nType: ' + hero.getItems()[i].type + '\nDescription: ' + hero.getItems()[i].desc + '\n';
+
+                                if (hero.getItems()[i].type == 'Atk') {
+                                    tempItemsDisplay += 'Attack: ' + hero.getItems()[i].damage + '\n';
+                                } else {
+                                    tempItemsDisplay += 'Defense: ' + hero.getItems()[i].defense + '\n';
+                                }
+                            }
+
+                            
+                                console.log('Hero:\nName: ' + hero.name + '\nHP: ' + hero.getHp() + '\nAttack: ' + hero.getAttack() + '\nItems: ' + tempItemsDisplay + '\nPress (1) Back to options');
+                            do {   
+                                var userIn3 = readline.question(">>> ");
+                                var checkUserIn3 = checkInput(userIn3, [1]); // Validate user input. returns true/false.
+                                if (checkUserIn3) {
+                                    checkUserIn2 = false;
+                                }
+                            } while(!checkUserIn3);
                             break;
                         case '2':
                             do {
