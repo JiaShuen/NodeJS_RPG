@@ -1,7 +1,7 @@
 const Character = require("./Character");
 
 class Hero extends Character {
-    constructor(name, hp, attack, items = []) {
+    constructor(name, hp, attack = 0, items = []) {
         super(name, hp, attack);
         this.items = items;
     }  

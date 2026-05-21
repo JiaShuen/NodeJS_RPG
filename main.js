@@ -5,18 +5,37 @@ const DefItem = require("./Classes/defItem");
 const readline = require('readline-sync');
 const fs = require('fs');
 
-//initialize characters and game variables
+//initialize characters
 var hero;
-var demonKing = new Demon("Demon King", 3, 0);
+var demonKing = new Demon("Demon King", 5, 10);
+// Get Items for game
 var itemsArr = JSON.parse(fs.readFileSync('./Data/items.json')).items;
+// Set game variables, tells program when to stop the game loop. Default is true, changes to false when hero or demon king's HP reaches 0.
 var continueGame = true;
+// Retrieve save data
 var saveHero = fs.readFileSync('./Data/saveData.json');
 if (saveHero == '') {
-    hero = new Hero("Hero", 3, 0);
+    // If save data file is empty, create a new hero with default values.Hp: 3, Atk: 7, no items.
+    hero = new Hero("Hero", 8, 7);
 } else {
+    // If there is save data, change JSON data to JS object, create hero object with stored values, calculating hero's max HP and Attack values including items.
     var saveData = JSON.parse(saveHero);
     console.log(saveData);
-    hero = new Hero(saveData.name, saveData.hp, saveData.atk, saveData.items);
+    // Gets hero's max attack value by adding base attack and attack item bonuses.
+    var heroAtkVal = saveData.attack;
+    for (let i = 0; i < saveData.items.length; i++) {
+        if (saveData.items[i].type == 'Atk') {
+            heroAtkVal += saveData.items[i].attack;
+        }
+    } 
+    // Gets hero's max hp value by adding base hp and defense item bonuses.
+    var heroHpVal = saveData.hp;
+    for (let i = 0; i < saveData.items.length; i++) {
+        if (saveData.items[i].type == 'Def') {
+            heroHpVal += saveData.items[i].defense;
+        }
+    } 
+    hero = new Hero(saveData.name, heroHpVal, heroAtkVal, saveData.items);
 }
 
 function getRandomInt(minVal, maxVal) {
@@ -43,16 +62,15 @@ function checkInput(input, posVal) {
 }
 
 function playgame() {
+    var atkHero = getRandomInt(hero.getAttack() * 0.5, hero.getAttack() * 1.25); // Returns a random integer between 50% and 125% of the hero's max attack value. This is the attack value for this turn. Default max is 8, min is 4.
+    var atkDemon = getRandomInt(demonKing.getAttack() * 0.5, demonKing.getAttack() * 1.25); // Returns a random integer between 50% and 125% of the demon king's attack value. This is the attack value for this turn. Default max is 12, min is 5.
 
-    var atkhero = getRandomInt(1, 10);
-    var atkdemon = getRandomInt(1, 6);
+    console.log("Hero ATK: " + atkHero + " | Demon King ATK: " + atkDemon);
 
-    console.log("Hero ATK: " + atkhero + " | Demon King ATK: " + atkdemon);
-
-    if (atkhero > atkdemon) {
+    if (atkHero > atkDemon) {
         demonKing.hp -= 1;
         console.log("You attacked the Demon King! The Demon King has " + demonKing.getHp() + " HP left.");
-    } else if (atkhero < atkdemon) {
+    } else if (atkHero < atkDemon) {
         hero.hp -= 1;
         console.log("The Demon King attacked you! You have " + hero.getHp() + " HP left.");
     } else {
@@ -61,7 +79,9 @@ function playgame() {
 
     if (hero.getHp() == 0 || demonKing.getHp() == 0) {
         continueGame = false;
+
         if (hero.getHp() == 0) {
+            hero.hp = 8; // Reset hero's HP to default value for next game.
             console.log("You have been defeated by the Demon King! Game Over.");
         } else {
             console.log("Congratulations! You have defeated the Demon King! You have earned an item!");
@@ -74,14 +94,13 @@ function playgame() {
                 } else if (randomItem.type == 'Def') {
                     hero.items.push(new DefItem(randomItem.id, randomItem.name, randomItem.description, randomItem.type, randomItem.defense));
                 }
-
-                var jsonData = JSON.stringify(hero, null, 2);
-                fs.writeFileSync('./Data/saveData.json', jsonData);
             }
         }
+
+        var jsonData = JSON.stringify(hero, null, 2);
+        fs.writeFileSync('./Data/saveData.json', jsonData);
     }
 }
-
 
 // Main page
 do {
@@ -115,8 +134,7 @@ do {
                                 }
                             }
 
-                            
-                                console.log('Hero:\nName: ' + hero.name + '\nHP: ' + hero.getHp() + '\nAttack: ' + hero.getAttack() + '\nItems: ' + tempItemsDisplay + '\nPress (1) Back to options');
+                            console.log('Hero:\nName: ' + hero.getName() + '\nHP: ' + hero.getHp() + '\nAttack: ' + hero.getAttack() + '\nItems: ' + tempItemsDisplay + '\nPress (1) Back to options');
                             do {   
                                 var userIn3 = readline.question(">>> ");
                                 var checkUserIn3 = checkInput(userIn3, [1]); // Validate user input. returns true/false.
@@ -126,6 +144,8 @@ do {
                             } while(!checkUserIn3);
                             break;
                         case '2':
+                            console.log("Hero Atk: " + hero.getAttack());
+                            console.log("Hero Hp: " + hero.getHp());
                             do {
                                 playgame();
                             } while (continueGame);
